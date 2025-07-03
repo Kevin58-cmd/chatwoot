@@ -31,7 +31,7 @@ import { domPurifyConfig } from 'shared/helpers/HTMLSanitizer.js';
 
 import { vResizeObserver } from '@vueuse/components';
 import { directive as onClickaway } from 'vue3-click-away';
-
+import localforagePlugin from '../dashboard/store/modules/groups/localforage';
 import 'floating-vue/dist/style.css';
 
 const i18n = createI18n({
@@ -43,6 +43,7 @@ const i18n = createI18n({
 sync(store, router);
 
 const app = createApp(App);
+app.use(localforagePlugin);
 app.use(i18n);
 app.use(store);
 app.use(router);

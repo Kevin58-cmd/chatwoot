@@ -53,7 +53,8 @@ import captainInboxes from './captain/inboxes';
 import captainBulkActions from './captain/bulkActions';
 import copilotThreads from './captain/copilotThreads';
 import copilotMessages from './captain/copilotMessages';
-
+import groups from './modules/groups';
+import dialog from './modules/dialog';
 const plugins = [];
 
 export default createStore({
@@ -111,6 +112,8 @@ export default createStore({
     captainBulkActions,
     copilotThreads,
     copilotMessages,
+    groups,
+    dialog,
   },
   plugins,
 });

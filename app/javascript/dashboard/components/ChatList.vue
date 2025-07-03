@@ -67,7 +67,7 @@ import {
 import { matchesFilters } from '../store/modules/conversations/helpers/filterHelpers';
 import { CONVERSATION_EVENTS } from '../helper/AnalyticsHelper/events';
 import { ASSIGNEE_TYPE_TAB_PERMISSIONS } from 'dashboard/constants/permissions.js';
-
+import ChatListHeaderTop from './ChatListHeaderTop.vue';
 import 'vue-virtual-scroller/dist/vue-virtual-scroller.css';
 
 const props = defineProps({
@@ -86,7 +86,6 @@ const { t } = useI18n();
 const router = useRouter();
 const route = useRoute();
 const store = useStore();
-
 const conversationListRef = ref(null);
 const conversationDynamicScroller = ref(null);
 
@@ -838,6 +837,13 @@ watch(conversationFilters, (newVal, oldVal) => {
     store.dispatch('updateChatListFilters', newVal);
   }
 });
+
+watch(conversationList, (newVal, oldVal) => {
+  if (newVal !== oldVal) {
+    // console.log('updateUserGroupFromOrigiItems', newVal);
+    store.dispatch('groups/updateUserGroupFromOrigiItems', newVal);
+  }
+});
 </script>
 
 <template>
@@ -849,6 +855,7 @@ watch(conversationFilters, (newVal, oldVal) => {
     ]"
   >
     <slot />
+    <ChatListHeaderTop />
     <ChatListHeader
       :page-title="pageTitle"
       :has-applied-filters="hasAppliedFilters"
@@ -954,8 +961,11 @@ watch(conversationFilters, (newVal, oldVal) => {
           </DynamicScrollerItem>
         </template>
         <template #after>
-          <div v-if="chatListLoading" class="flex justify-center my-4">
-            <Spinner class="text-n-brand" />
+          <div
+            v-if="chatListLoading"
+            class="text-center"
+          >
+            <span class="mt-4 mb-4 spinner" />
           </div>
           <p
             v-else-if="showEndOfListMessage"

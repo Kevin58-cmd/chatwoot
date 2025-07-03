@@ -19,6 +19,7 @@ import {
   verifyServiceWorkerExistence,
 } from './helper/pushHelper';
 import ReconnectService from 'dashboard/helper/ReconnectService';
+import SimpleInputDialog from './components-next/dialog/SimpleInputDialog.vue';
 
 export default {
   name: 'App',
@@ -31,6 +32,7 @@ export default {
     PaymentPendingBanner,
     WootSnackbarBox,
     PendingEmailVerificationBanner,
+    SimpleInputDialog,
   },
   setup() {
     const router = useRouter();
@@ -80,6 +82,7 @@ export default {
       immediate: true,
       handler() {
         if (this.currentAccountId) {
+          this.$store.dispatch('groups/setAccountId', this.currentAccountId);
           this.initializeAccount();
         }
       },
@@ -146,13 +149,20 @@ export default {
       <PaymentPendingBanner v-if="hideOnOnboardingView" />
     </template>
     <router-view v-slot="{ Component }">
-      <transition name="fade" mode="out-in">
+      <transition
+        name="fade"
+        mode="out-in"
+      >
         <component :is="Component" />
       </transition>
     </router-view>
-    <AddAccountModal :show="showAddAccountModal" :has-accounts="hasAccounts" />
+    <AddAccountModal
+      :show="showAddAccountModal"
+      :has-accounts="hasAccounts"
+    />
     <WootSnackbarBox />
     <NetworkNotification />
+    <SimpleInputDialog />
   </div>
   <LoadingState v-else />
 </template>
