@@ -117,13 +117,13 @@ export default {
       return lastMsg.content;
     },
     isSeleced() {
+      let chatIds = this.chat.children.filter(
+        it => !this.group.userGroupData[it].isFolder
+      );
       return (
-        this.chat.children.length &&
-        this.chat.children.filter(
-          it =>
-            !this.group.userGroupData[it].isFolder &&
-            !this.isConversationSelected(parseInt(it, 10))
-        ).length === 0
+        chatIds.length &&
+        chatIds.filter(it => !this.isConversationSelected(parseInt(it, 10)))
+          .length === 0
       );
     },
     isMultiSelected: {
@@ -266,8 +266,8 @@ export default {
     },
     onDeleteFolder() {
       this.dialog.openEnsureDialog({
-        title: this.$t('DELETE_FOLDER_NOTICE_TITLE'),
-        message: this.$t('DELETE_FOLDER_NOTICE_MESSAGE'),
+        title: this.$t('FOLDER.DELETE_FOLDER_NOTICE_TITLE'),
+        message: this.$t('FOLDER.DELETE_FOLDER_NOTICE_MESSAGE'),
         onEnsure: ensure => {
           if (ensure) {
             this.group.removeItem(this.chat.id);
@@ -278,8 +278,8 @@ export default {
     },
     onClearFolder() {
       this.dialog.openEnsureDialog({
-        title: this.$t('CLEAR_FOLDER_NOTICE_TITLE'),
-        message: this.$t('CLEAR_FOLDER_NOTICE_MESSAGE'),
+        title: this.$t('FOLDER.CLEAR_FOLDER_NOTICE_TITLE'),
+        message: this.$t('FOLDER.CLEAR_FOLDER_NOTICE_MESSAGE'),
         onEnsure: ensure => {
           if (ensure) {
             this.group.clearFolder(this.chat.id);
