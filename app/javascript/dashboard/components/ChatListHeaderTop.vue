@@ -227,12 +227,13 @@ const hasTask = computed(
   </div>
 
   <div
-    v-if="multiSend.tasks"
+    v-if="multiSend.tasks.length"
     class="flex items-center px-3 pt-1"
   >
     <NextButton
       v-for="task in multiSend.tasks"
       :key="task.id"
+      v-tooltip.top-end="task.messages[0].message || $t('FOLDER.MEDIA_MESSAGE')"
       :label="task.sendedIds.length + '/' + task.chatIds.length"
       class="mr-1 flex-shrink-0"
       sm

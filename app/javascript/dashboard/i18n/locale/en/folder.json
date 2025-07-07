@@ -25,6 +25,7 @@
         "INPUT_TIME_INTERVAL": "请输入间隔时间(单位：秒)",
         "MULTI_SEND_PLACEHOLDER": "在这里输入群发信息",
         "SEND": "已发送给至",
-        "DEFAULT_FOLDER": "默认分类"
+        "DEFAULT_FOLDER": "默认分类",
+        "SELECT_CHAT_FIRST": "请先勾选联系人，再点击群发"
     }
 }

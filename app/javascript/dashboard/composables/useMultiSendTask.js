@@ -34,7 +34,7 @@ export const useMultiSendStore = defineStore('multiSendTask', () => {
     let index = taskList.value.findIndex(it => it.id === taskId);
     if (index !== -1) {
       taskList.value[index].stop = true;
-      taskList.value = taskList.value.splice(index, 1);
+      taskList.value.splice(index, 1);
       saveTaskList();
     }
   }
@@ -147,6 +147,7 @@ export const useMultiSendStore = defineStore('multiSendTask', () => {
       if (taskCache) {
         taskCache.forEach(it => {
           it.pause = true;
+          it.stop = false;
         });
         taskList.value = taskCache;
       }

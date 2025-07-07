@@ -21,6 +21,7 @@ import { useDialogStore } from 'dashboard/composables/useDialog';
 import { useGroupStore } from 'dashboard/composables/useGroup';
 import { useMultiSendStore } from 'dashboard/composables/useMultiSendTask';
 import { uuid } from 'dashboard/helper/stringHelper';
+import { useAlert } from 'dashboard/composables';
 export default {
   components: {
     FileUpload,
@@ -154,6 +155,10 @@ export default {
       });
     },
     onSend() {
+      if (!this.group.multiSendChatIds.length) {
+        useAlert(this.$t('FOLDER.SELECT_CHAT_FIRST'));
+        return;
+      }
       const isOnWhatsApp =
         this.isATwilioWhatsAppChannel ||
         this.isAWhatsAppCloudChannel ||

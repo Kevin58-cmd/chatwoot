@@ -195,7 +195,7 @@ export default {
     onClickAddChildFoler() {
       let name = new Date().toISOString().substring(0, 16).replace('T', ' ');
       this.dialog.openInputDialog({
-        title: this.$t('CUSTOM_ROLE.FORM.NAME.PLACEHOLDER'),
+        title: this.$t('FOLDER.INPUT_NAME'),
         placeholder: this.$t('FOLDER.INPUT_HERE'),
         defaultInputValue: name,
         onConfirm: value => {
