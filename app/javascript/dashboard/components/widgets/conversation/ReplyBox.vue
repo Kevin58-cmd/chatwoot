@@ -1105,7 +1105,12 @@ export default {
     :action-button-label="$t('CONVERSATION.ASSIGN_TO_ME')"
     @primary-action="onClickSelfAssign"
   />
-  <div ref="replyEditor" class="reply-box" :class="replyBoxClass">
+  <div
+    id="first-reply-box"
+    ref="replyEditor"
+    class="reply-box"
+    :class="replyBoxClass"
+  >
     <ReplyTopPanel
       :mode="replyType"
       :is-message-length-reaching-threshold="isMessageLengthReachingThreshold"

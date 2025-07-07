@@ -11,7 +11,7 @@ import MessageList from 'next/message/MessageList.vue';
 import ConversationLabelSuggestion from './conversation/LabelSuggestion.vue';
 import Banner from 'dashboard/components/ui/Banner.vue';
 import Spinner from 'dashboard/components-next/spinner/Spinner.vue';
-
+import MultiSendEditor from './MultiSendEditor.vue';
 // stores and apis
 import { mapGetters } from 'vuex';
 
@@ -43,6 +43,7 @@ export default {
     Banner,
     ConversationLabelSuggestion,
     Spinner,
+    MultiSendEditor,
   },
   mixins: [inboxMixin],
   setup() {
@@ -472,7 +473,10 @@ export default {
           <li
             class="min-h-[4rem] flex flex-shrink-0 flex-grow-0 items-center flex-auto justify-center max-w-full mt-0 mr-0 mb-1 ml-0 relative first:mt-auto last:mb-0"
           >
-            <Spinner v-if="shouldShowSpinner" class="text-n-brand" />
+            <Spinner
+              v-if="shouldShowSpinner"
+              class="text-n-brand"
+            />
           </li>
         </transition>
       </template>
@@ -523,6 +527,9 @@ export default {
         :pop-out-reply-box="isPopOutReplyBox"
         @update:pop-out-reply-box="isPopOutReplyBox = $event"
       />
+    </div>
+    <div class="flex relative flex-col">
+      <MultiSendEditor />
     </div>
   </div>
 </template>

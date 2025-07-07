@@ -23,6 +23,11 @@ export default {
       type: Object,
       required: true,
     },
+    groupItem: {
+      // 如果是分类的时候，这个是分类中的项目，可以获取到level
+      type: Object,
+      default: null,
+    },
     teamId: {
       type: [String, Number],
       default: 0,
@@ -54,6 +59,7 @@ export default {
     :team-id="teamId"
     :folders-id="foldersId"
     :chat="source"
+    :group-item="groupItem"
     :conversation-type="conversationType"
     :selected="isConversationSelected(source.id)"
     :show-assignee="showAssignee"

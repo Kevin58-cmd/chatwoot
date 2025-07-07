@@ -1,0 +1,31 @@
+{
+    "FOLDER": {
+        "ADD_FOLDER": "添加分类",
+        "PATCH_MODE": "批量操作",
+        "ADD_CHILD_FOLDER": "添加子分类",
+        "PATCH_MOVE_IN": "批量移入",
+        "PATCH_MOVE_OUT": "批量移除",
+        "DELETE_FOLDER": "删除分类",
+        "CLEAR_FOLER": "清空分类",
+        "CHANGE_NAME": "修改名称",
+        "CHANGE_COLOR": "修改颜色",
+        "CHANGE_EMOJI": "修改头像",
+        "INPUT_HERA": "在这里输入",
+        "INPUT_NAME": "请输入名字",
+        "INPUT_FOLDER": "导入分类",
+        "EXPORT_FOLDER": "导出分类",
+        "SEND_INTERVAL": "群发间隔",
+        "DELETE_FOLDER_NOTICE_TITLE": "你确定要删除此分类吗？",
+        "DELETE_FOLDER_NOTICE_MESSAGE": "删除分类后，分类中的所有群组会被添加到默认分类中",
+        "CLEAR_FOLDER_NOTICE_TITLE": "清空分类后，分类中的所有群组会被添加到默认分类中",
+        "CLEAR_FOLDER_NOTICE_MESSAGE": "你确定要清空此分类吗？",
+        "MEDIA_MESSAGE": "媒体信息",
+        "FILE_ERROR": "文件不是分类数据文件，请重新导入",
+        "READ_FILE_FAILED": "读取文件失败",
+        "INPUT_TIME_INTERVAL": "请输入间隔时间(单位：秒)",
+        "MULTI_SEND_PLACEHOLDER": "在这里输入群发信息",
+        "SEND": "已发送给至",
+        "DEFAULT_FOLDER": "默认分类",
+        "SELECT_CHAT_FIRST": "请先勾选联系人，再点击群发"
+    }
+}

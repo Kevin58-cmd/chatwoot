@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "vue": ["node_modules/vue/dist/vue.esm-bundler.js"],
+      "components/*": ["app/javascript/dashboard/components/*"],
+      "next/*": ["app/javascript/dashboard/components-next/*"],
+      "v3/*": ["app/javascript/v3/*"],
+      "dashboard/*": ["app/javascript/dashboard/*"],
+      "helpers/*": ["app/javascript/shared/helpers/*"],
+      "shared/*": ["app/javascript/shared/*"],
+      "survey/*": ["app/javascript/survey/*"],
+      "widget/*": ["app/javascript/widget/*"],
+      "assets/*": ["app/javascript/dashboard/assets/*"]
+    }
+  },
+  "include": ["app/javascript/**/*"]
+}

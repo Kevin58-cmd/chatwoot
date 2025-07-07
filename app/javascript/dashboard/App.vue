@@ -20,6 +20,11 @@ import {
 } from './helper/pushHelper';
 import ReconnectService from 'dashboard/helper/ReconnectService';
 import SimpleInputDialog from './components-next/dialog/SimpleInputDialog.vue';
+import ChooseColorDialog from 'next/dialog/ChooseColorDialog.vue';
+import SimpleEnsureDialog from 'next/dialog/SimpleEnsureDialog.vue';
+import EmojiDialog from 'next/dialog/EmojiDialog.vue';
+import { useGroupStore } from './composables/useGroup';
+import { useMultiSendStore } from './composables/useMultiSendTask';
 
 export default {
   name: 'App',
@@ -33,6 +38,9 @@ export default {
     WootSnackbarBox,
     PendingEmailVerificationBanner,
     SimpleInputDialog,
+    ChooseColorDialog,
+    SimpleEnsureDialog,
+    EmojiDialog,
   },
   setup() {
     const router = useRouter();
@@ -40,12 +48,14 @@ export default {
     const { accountId } = useAccount();
     // Use the font size composable (it automatically sets up the watcher)
     const { currentFontSize } = useFontSize();
-
+    const group = useGroupStore();
     return {
       router,
       store,
       currentAccountId: accountId,
       currentFontSize,
+      group,
+      multiSendTask: useMultiSendStore(),
     };
   },
   data() {
@@ -82,7 +92,10 @@ export default {
       immediate: true,
       handler() {
         if (this.currentAccountId) {
-          this.$store.dispatch('groups/setAccountId', this.currentAccountId);
+          this.group
+            .setAccountId(this.currentAccountId)
+            .then(() => this.multiSendTask.initTaskList());
+          // this.$store.dispatch('groups/setAccountId', this.currentAccountId);
           this.initializeAccount();
         }
       },
@@ -163,6 +176,9 @@ export default {
     <WootSnackbarBox />
     <NetworkNotification />
     <SimpleInputDialog />
+    <ChooseColorDialog />
+    <SimpleEnsureDialog />
+    <EmojiDialog />
   </div>
   <LoadingState v-else />
 </template>
