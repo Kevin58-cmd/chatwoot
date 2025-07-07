@@ -27,11 +27,11 @@ import ConversationFilter from 'next/filter/ConversationFilter.vue';
 import SaveCustomView from 'next/filter/SaveCustomView.vue';
 import ChatTypeTabs from './widgets/ChatTypeTabs.vue';
 import ConversationItem from './ConversationItem.vue';
+import ConversationGroupCard from './widgets/conversation/ConversationGroupCard.vue';
 import DeleteCustomViews from 'dashboard/routes/dashboard/customviews/DeleteCustomViews.vue';
 import ConversationBulkActions from './widgets/conversation/conversationBulkActions/Index.vue';
 import IntersectionObserver from './IntersectionObserver.vue';
 import TeleportWithDirection from 'dashboard/components-next/TeleportWithDirection.vue';
-import Spinner from 'dashboard/components-next/spinner/Spinner.vue';
 
 import { useUISettings } from 'dashboard/composables/useUISettings';
 import { useAlert } from 'dashboard/composables';
@@ -59,6 +59,7 @@ import { conversationListPageURL } from '../helper/URLHelper';
 import {
   isOnMentionsView,
   isOnUnattendedView,
+  isOnFoldersView,
 } from '../store/modules/conversations/helpers/actionHelpers';
 import {
   getUserPermissions,
@@ -69,6 +70,7 @@ import { CONVERSATION_EVENTS } from '../helper/AnalyticsHelper/events';
 import { ASSIGNEE_TYPE_TAB_PERMISSIONS } from 'dashboard/constants/permissions.js';
 import ChatListHeaderTop from './ChatListHeaderTop.vue';
 import 'vue-virtual-scroller/dist/vue-virtual-scroller.css';
+import { useGroupStore } from 'dashboard/composables/useGroup';
 
 const props = defineProps({
   conversationInbox: { type: [String, Number], default: 0 },
@@ -128,6 +130,8 @@ const labels = useMapGetter('labels/getLabels');
 const currentAccountId = useMapGetter('getCurrentAccountId');
 // We can't useFunctionGetter here since it needs to be called on setup?
 const getTeamFn = useMapGetter('teams/getTeam');
+const group = useGroupStore();
+const userGroupList = computed(() => group.getUserGroupList);
 
 useChatListKeyboardEvents(conversationListRef);
 const {
@@ -360,6 +364,18 @@ const allConversationsSelected = computed(() => {
 
 const uniqueInboxes = computed(() => {
   return [...new Set(selectedInboxes.value)];
+});
+
+const isAllCoversationAndMe = computed(() => {
+  let rootState = { route };
+  return (
+    activeStatus.value === wootConstants.STATUS_TYPE.ALL &&
+    !hasAppliedFiltersOrActiveFolders.value &&
+    !isOnMentionsView(rootState) &&
+    !isOnFoldersView(rootState) &&
+    !isOnUnattendedView(rootState) &&
+    activeAssigneeTab.value === wootConstants.ASSIGNEE_TYPE.ME
+  );
 });
 
 // ---------------------- Methods -----------------------
@@ -779,6 +795,7 @@ const selectedConversationId = ref(null);
 async function deleteConversation() {
   try {
     await store.dispatch('deleteConversation', selectedConversationId.value);
+    group.removeItem(selectedConversationId.value + ''); // 从分类中删除此对话
     redirectToConversationList();
     selectedConversationId.value = null;
     deleteConversationDialogRef.value.close();
@@ -841,9 +858,36 @@ watch(conversationFilters, (newVal, oldVal) => {
 watch(conversationList, (newVal, oldVal) => {
   if (newVal !== oldVal) {
     // console.log('updateUserGroupFromOrigiItems', newVal);
-    store.dispatch('groups/updateUserGroupFromOrigiItems', newVal);
+    group.updateUserGroupFromOrigiItems(newVal);
+    // store.dispatch('groups/updateUserGroupFromOrigiItems', newVal);
   }
 });
+
+// watch(userGroupList, newVal => {
+//   console.log('userGroupList', newVal);
+// });
+
+// watch(
+//   [
+//     computed(() => props.foldersId),
+//     activeAssigneeTab,
+//     activeInbox,
+//     activeFolder,
+//     activeTeam,
+//   ],
+//   ([newVal0, newVal1, newVal2, newVal3, newVal4]) => {
+//     console.log({
+//       foldersId: newVal0,
+//       activeAssigneeTab: newVal1,
+//       activeInbox: newVal2,
+//       activeFolder: newVal3,
+//       activeTeam: newVal4,
+//     });
+//   },
+//   {
+//     immediate: true,
+//   }
+// );
 </script>
 
 <template>
@@ -926,9 +970,76 @@ watch(conversationList, (newVal, oldVal) => {
       :class="{ 'overflow-hidden': isContextMenuOpen }"
     >
       <DynamicScroller
+        v-if="isAllCoversationAndMe"
+        ref="conversationDynamicScroller"
+        :items="userGroupList"
+        :min-item-size="62"
+        class="w-full h-full overflow-auto"
+      >
+        <template #default="{ item, index, active }">
+          <!--
+            If we encounter resizing issues, we can set the `watchData` prop to true
+            this will deeply watch the entire object instead of just size dependencies
+            But it can impact performance
+          -->
+          <DynamicScrollerItem
+            :item="item.data"
+            :active="active"
+            :data-index="index"
+            :size-dependencies="[
+              item.data.messages,
+              item.data.labels,
+              item.data.uuid,
+              item.data.inbox_id,
+            ]"
+          >
+            <ConversationGroupCard
+              v-if="item.isFolder"
+              :chat="item"
+              enable-context-menu
+              @select-conversation="selectConversation"
+              @de-select-conversation="deSelectConversation"
+            />
+            <ConversationItem
+              v-else
+              :group-item="item"
+              :source="item.data"
+              :label="label"
+              :team-id="teamId"
+              :folders-id="foldersId"
+              :conversation-type="conversationType"
+              :show-assignee="showAssigneeInConversationCard"
+              @select-conversation="selectConversation"
+              @de-select-conversation="deSelectConversation"
+            />
+          </DynamicScrollerItem>
+        </template>
+        <template #after>
+          <div
+            v-if="chatListLoading"
+            class="text-center"
+          >
+            <span class="mt-4 mb-4 spinner" />
+          </div>
+          <p
+            v-else-if="showEndOfListMessage"
+            class="p-4 text-center text-n-slate-11"
+          >
+            {{ $t('CHAT_LIST.EOF') }}
+          </p>
+          <IntersectionObserver
+            v-else
+            :options="intersectionObserverOptions"
+            @observed="loadMoreConversations"
+          />
+        </template>
+      </DynamicScroller>
+
+      <DynamicScroller
+        v-else
         ref="conversationDynamicScroller"
         :items="conversationList"
-        :min-item-size="24"
+        :min-item-size="62"
         class="w-full h-full overflow-auto"
       >
         <template #default="{ item, index, active }">

@@ -209,6 +209,7 @@ export default {
       return ALLOWED_FILE_TYPES;
     },
     enableDragAndDrop() {
+      if (!this.newConversationModalActive) return '#first-reply-box';
       return !this.newConversationModalActive;
     },
     audioRecorderPlayStopIcon() {
@@ -261,7 +262,10 @@ export default {
 </script>
 
 <template>
-  <div class="flex justify-between p-3" :class="wrapClass">
+  <div
+    class="flex justify-between p-3"
+    :class="wrapClass"
+  >
     <div class="left-wrap">
       <NextButton
         v-tooltip.top-end="$t('CONVERSATION.REPLYBOX.TIP_EMOJI_ICON')"
@@ -355,9 +359,12 @@ export default {
       <transition name="modal-fade">
         <div
           v-show="uploadRef && uploadRef.dropActive"
-          class="fixed top-0 bottom-0 left-0 right-0 z-20 flex flex-col items-center justify-center w-full h-full gap-2 text-n-slate-12 bg-modal-backdrop-light dark:bg-modal-backdrop-dark"
+          class="z-20 flex flex-col items-center justify-center gap-2 text-n-slate-12 bg-modal-backdrop-light dark:bg-modal-backdrop-dark ml-3 -mt-[226px] h-[280px] w-full absolute rounded-[12px]"
         >
-          <fluent-icon icon="cloud-backup" size="40" />
+          <fluent-icon
+            icon="cloud-backup"
+            size="40"
+          />
           <h4 class="text-2xl break-words text-n-slate-12">
             {{ $t('CONVERSATION.REPLYBOX.DRAG_DROP') }}
           </h4>

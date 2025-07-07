@@ -31,9 +31,9 @@ import { domPurifyConfig } from 'shared/helpers/HTMLSanitizer.js';
 
 import { vResizeObserver } from '@vueuse/components';
 import { directive as onClickaway } from 'vue3-click-away';
-import localforagePlugin from '../dashboard/store/modules/groups/localforage';
+import localforagePlugin from '../dashboard/helper/localforage';
 import 'floating-vue/dist/style.css';
-
+import { createPinia } from 'pinia';
 const i18n = createI18n({
   legacy: false, // https://github.com/intlify/vue-i18n/issues/1902
   locale: 'en',
@@ -41,12 +41,13 @@ const i18n = createI18n({
 });
 
 sync(store, router);
-
+const pinia = createPinia();
 const app = createApp(App);
 app.use(localforagePlugin);
 app.use(i18n);
 app.use(store);
 app.use(router);
+app.use(pinia);
 
 // [VITE] Disabled this, need to renable later
 if (window.errorLoggingConfig) {

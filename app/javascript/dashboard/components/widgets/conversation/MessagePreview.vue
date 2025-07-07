@@ -18,6 +18,10 @@ export default {
       type: String,
       default: '',
     },
+    color: {
+      type: String,
+      default: '',
+    },
   },
   setup() {
     const { getPlainText } = useMessageFormatter();
@@ -68,41 +72,76 @@ export default {
         size="16"
         class="-mt-0.5 align-middle text-n-slate-11 inline-block"
         icon="lock-closed"
+        :style="{
+          color: color,
+        }"
       />
       <fluent-icon
         v-else-if="messageByAgent"
         size="16"
         class="-mt-0.5 align-middle text-n-slate-11 inline-block"
         icon="arrow-reply"
+        :style="{
+          color: color,
+        }"
       />
       <fluent-icon
         v-else-if="isMessageAnActivity"
         size="16"
         class="-mt-0.5 align-middle text-n-slate-11 inline-block"
         icon="info"
+        :style="{
+          color: color,
+        }"
       />
     </template>
-    <span v-if="message.content && isMessageSticker">
+    <span
+      v-if="message.content && isMessageSticker"
+      :style="{
+        color: color,
+      }"
+    >
       <fluent-icon
         size="16"
         class="-mt-0.5 align-middle inline-block text-n-slate-11"
         icon="image"
+        :style="{
+          color: color,
+        }"
       />
       {{ $t('CHAT_LIST.ATTACHMENTS.image.CONTENT') }}
     </span>
-    <span v-else-if="message.content">
+    <span
+      v-else-if="message.content"
+      :style="{
+        color: color,
+      }"
+    >
       {{ parsedLastMessage }}
     </span>
-    <span v-else-if="message.attachments">
+    <span
+      v-else-if="message.attachments"
+      :style="{
+        color: color,
+      }"
+    >
       <fluent-icon
         v-if="attachmentIcon && showMessageType"
         size="16"
         class="-mt-0.5 align-middle inline-block text-n-slate-11"
         :icon="attachmentIcon"
+        :style="{
+          color: color,
+        }"
       />
       {{ $t(`${attachmentMessageContent}`) }}
     </span>
-    <span v-else>
+    <span
+      v-else
+      :style="{
+        color: color,
+      }"
+    >
       {{ defaultEmptyMessage || $t('CHAT_LIST.NO_CONTENT') }}
     </span>
   </div>
