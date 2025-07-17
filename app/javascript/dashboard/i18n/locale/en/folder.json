@@ -26,6 +26,9 @@
         "MULTI_SEND_PLACEHOLDER": "在这里输入群发信息",
         "SEND": "已发送给至",
         "DEFAULT_FOLDER": "默认分类",
-        "SELECT_CHAT_FIRST": "请先勾选联系人，再点击群发"
+        "SELECT_CHAT_FIRST": "请先勾选联系人，再点击群发",
+        "COPY_ALL_CONTACT_PHONE": "复制所有联系人手机号",
+        "COPY_SELECTED_CONTACT_PHONE": "复制勾选的联系人手机号",
+        "NO_COPY": "没有需要复制的信息"
     }
 }

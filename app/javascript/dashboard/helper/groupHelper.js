@@ -33,6 +33,7 @@ export function createItemFronOriginItem(item) {
       sender: {
         name: item.meta?.sender?.name ?? '',
         id: item.meta?.sender?.id ?? '',
+        phone_number: item.meta?.sender?.phone_number ?? '',
       },
       assignee: {
         name: item.meta?.assignee?.name ?? '',
