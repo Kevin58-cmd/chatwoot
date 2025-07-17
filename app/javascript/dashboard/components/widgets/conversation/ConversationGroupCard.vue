@@ -10,6 +10,8 @@ import MenuItem from './contextMenu/menuItem.vue';
 import { useDialogStore } from 'dashboard/composables/useDialog';
 import { useGroupStore } from 'dashboard/composables/useGroup';
 import Avatar from '../Avatar.vue';
+import { copyTextToClipboard } from 'helpers/clipboard';
+import { useAlert } from 'dashboard/composables';
 
 export default {
   components: {
@@ -264,6 +266,28 @@ export default {
       this.group.patchMoveChatsToGroup(this.chat.id, true);
       this.closeContextMenu();
     },
+    async copyAllContactPhone() {
+      let arr = this.group.getAllUserPhoneNumber(this.chat.id);
+      let str = arr.join('\n');
+      if (str) {
+        await copyTextToClipboard(str);
+        useAlert(this.$t('COMPONENTS.CODE.COPY_SUCCESSFUL'));
+      } else {
+        useAlert(this.$t('FOLDER.NO_COPY'));
+      }
+      this.closeContextMenu();
+    },
+    async copySelectedContachPhone() {
+      let arr = this.group.getSelectChatPhoneNumber();
+      let str = arr.join('\n');
+      if (str) {
+        await copyTextToClipboard(str);
+        useAlert(this.$t('COMPONENTS.CODE.COPY_SUCCESSFUL'));
+      } else {
+        useAlert(this.$t('FOLDER.NO_COPY'));
+      }
+      this.closeContextMenu();
+    },
     onDeleteFolder() {
       this.dialog.openEnsureDialog({
         title: this.$t('FOLDER.DELETE_FOLDER_NOTICE_TITLE'),
@@ -480,6 +504,20 @@ export default {
             }"
             variant="label"
             @click="onClickChangeEmoji"
+          />
+          <MenuItem
+            :option="{
+              label: $t('FOLDER.COPY_ALL_CONTACT_PHONE'),
+            }"
+            variant="label"
+            @click="copyAllContactPhone"
+          />
+          <MenuItem
+            :option="{
+              label: $t('FOLDER.COPY_SELECTED_CONTACT_PHONE'),
+            }"
+            variant="label"
+            @click="copySelectedContachPhone"
           />
           <hr class="m-1 rounded border-b border-n-weak dark:border-n-weak" />
           <MenuItem

@@ -91,6 +91,9 @@ export default {
     currentAccountId: {
       immediate: true,
       handler() {
+        console.log('currentAccountId', {
+          currentAccountId: this.currentAccountId,
+        });
         if (this.currentAccountId) {
           this.group
             .setAccountId(this.currentAccountId)
