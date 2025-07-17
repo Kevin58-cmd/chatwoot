@@ -246,7 +246,7 @@ export const useGroupStore = defineStore('newgroup', {
           if (child?.isFolder) {
             descendants.push(...collectAllFolder(childId));
           } else {
-            let phone_number = child.data.meta?.sender?.phone_number;
+            let phone_number = child.data.meta?.sender?.phone_number ?? '';
             phone_number = phone_number.replace(/\D+/g, '');
             descendants.push(phone_number || '');
           }
@@ -262,7 +262,7 @@ export const useGroupStore = defineStore('newgroup', {
       this.multiSendChatIds.forEach(id => {
         let chat = this.userGroupData[id];
         if (chat) {
-          let phone_number = chat.data.meta?.sender?.phone_number;
+          let phone_number = chat.data.meta?.sender?.phone_number ?? '';
           phone_number = phone_number.replace(/\D+/g, '');
           arr.push(phone_number || '');
         }
