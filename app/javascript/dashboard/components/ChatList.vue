@@ -855,12 +855,10 @@ watch(conversationFilters, (newVal, oldVal) => {
   }
 });
 
-watch(conversationList, (newVal, oldVal) => {
-  if (newVal !== oldVal) {
-    // console.log('updateUserGroupFromOrigiItems', newVal);
-    group.updateUserGroupFromOrigiItems(newVal);
-    // store.dispatch('groups/updateUserGroupFromOrigiItems', newVal);
-  }
+watch(conversationList, newVal => {
+  console.log('updateUserGroupFromOrigiItems', newVal);
+  group.updateUserGroupFromOrigiItems(newVal);
+  // store.dispatch('groups/updateUserGroupFromOrigiItems', newVal);
 });
 
 // watch(userGroupList, newVal => {

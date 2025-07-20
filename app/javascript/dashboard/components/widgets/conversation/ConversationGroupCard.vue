@@ -267,7 +267,10 @@ export default {
       this.closeContextMenu();
     },
     async copyAllContactPhone() {
-      let arr = this.group.getAllUserPhoneNumber(this.chat.id);
+      let arr = await this.group.getAllUserPhoneNumber(
+        this.chat.id,
+        this.$store
+      );
       let str = arr.join('\n');
       if (str) {
         await copyTextToClipboard(str);
@@ -278,7 +281,7 @@ export default {
       this.closeContextMenu();
     },
     async copySelectedContachPhone() {
-      let arr = this.group.getSelectChatPhoneNumber();
+      let arr = await this.group.getSelectChatPhoneNumber(this.$store);
       let str = arr.join('\n');
       if (str) {
         await copyTextToClipboard(str);
