@@ -231,8 +231,25 @@ export const useGroupStore = defineStore('newgroup', {
       }
       this.multiSendChatIds = newMultiIds;
     },
-    getAllUserPhoneNumber(folderId) {
+    async getAllUserPhoneNumber(folderId, vuexStore) {
       let data = { ...this.userGroupData };
+      let noPhoneChat = Object.values(data).filter(it => {
+        return !it.isFolder && !(it.data.meta?.sender?.phone_number ?? '');
+      });
+
+      for (let i = 0; i < noPhoneChat.length; i += 1) {
+        let senderId = noPhoneChat[i].data.meta?.sender?.id ?? -1;
+        if (senderId !== -1) {
+          // 先store的缓存中获取，
+          let contactInfo = vuexStore.getters['contacts/getContact'](senderId);
+          if (contactInfo && contactInfo.id && contactInfo.phone_number) {
+            noPhoneChat[i].data.meta.sender.phone_number =
+              contactInfo.phone_number;
+          } else {
+            console.log('未查询到用户【' + senderId + '】');
+          }
+        }
+      }
 
       function collectAllFolder(id) {
         const node = data[id];
@@ -257,8 +274,29 @@ export const useGroupStore = defineStore('newgroup', {
       return collectAllFolder(folderId);
     },
 
-    getSelectChatPhoneNumber() {
+    async getSelectChatPhoneNumber(vuexStore) {
       let arr = [];
+      let noPhoneChat = this.multiSendChatIds.filter(id => {
+        let chat = this.userGroupData[id];
+        if (!chat) return false;
+        return !(chat.data.meta?.sender?.phone_number ?? '');
+      });
+
+      for (let i = 0; i < noPhoneChat.length; i += 1) {
+        let senderId =
+          this.userGroupData[noPhoneChat[i]].data.meta?.sender?.id ?? -1;
+        if (senderId !== -1) {
+          // 先store的缓存中获取，
+          let contactInfo = vuexStore.getters['contacts/getContact'](senderId);
+          if (contactInfo && contactInfo.id && contactInfo.phone_number) {
+            this.userGroupData[noPhoneChat[i]].data.meta.sender.phone_number =
+              contactInfo.phone_number;
+          } else {
+            console.log('未查询到用户【' + senderId + '】');
+          }
+        }
+      }
+
       this.multiSendChatIds.forEach(id => {
         let chat = this.userGroupData[id];
         if (chat) {
